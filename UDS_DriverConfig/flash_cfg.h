@@ -42,12 +42,12 @@ extern uint32_t __APP_FLASH_INFO_ADDR[];
 /*flash driver start addr*/
 extern uint32_t __FLASH_DRIVER_START_ADDR[];
 //#define FLASH_DRIVER_START_ADDR ((uint32_t*)__FLASH_DRIVER_START_ADDR)
-#define FLASH_DRIVER_START_ADDR (0x1FFF8010u)
+#define FLASH_DRIVER_START_ADDR (0x1FFF8000u)
 
 /*flash driver end addr*/
 extern uint32_t __FLASH_DRIVER_END_ADDR[];
 //#define FLASH_DRIVER_START_ADDR ((uint32_t*)__FLASH_DRIVER_END_ADDR)
-#define FLASH_DRIVER_END_ADDR   (0x1FFF8810u)
+#define FLASH_DRIVER_END_ADDR   (0x1FFF8800u)
 
 /*flash driver max data len*/
 #define FLASH_DRIVER_LEN (FLASH_DRIVER_END_ADDR - FLASH_DRIVER_START_ADDR + 1u)
