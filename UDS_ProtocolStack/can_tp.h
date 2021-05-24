@@ -2,9 +2,9 @@
  * @ 名称: can_tp.h
  * @ 描述:
  * @ 作者: Tomy
- * @ 日期: 2021年2月20日
+ * @ 日期: 2021年2月5日
  * @ 版本: V1.0
- * @ 历史: V1.0 2021年2月20日 Summary
+ * @ 历史: V1.0 2021年2月5日 Summary
  *
  * MIT License. Copyright (c) 2021 SummerFalls.
  */
@@ -14,31 +14,17 @@
 
 #include "can_tp_cfg.h"
 
-#ifdef USED_FIFO
+#ifdef EN_CAN_TP
+
 #include "multi_cyc_fifo.h"
-#endif
 
-/*uds network man function*/
-extern void CanTpMainFun(void);
+void CANTP_MainFun(void);
 
-/*read a frame can tp data  from UDS to Tp TxFIFO. If no data can read return FALSE, else return TRUE*/
-extern unsigned char ReadAFrameDataFromCanTP(tUdsId *o_pxRxCanID,
-                                             tLen *o_pxRxDataLen,
-                                             unsigned char *o_pucDataBuf);
+void CANTP_SytstemTickControl(void);
 
-/*write a frame data from CAN Tp to UDS RxFIFO*/
-extern unsigned char WriteAFrameDataInCanTP(const tUdsId i_xTxCanID,
-                                            const tLen i_xTxDataLen,
-                                            const unsigned char *i_pucDataBuf);
+void CANTP_Init(void);
 
-#ifdef USED_FIFO
-
-#define TX_CAN_TP_QUEUE_LEN (50u)
-#define RX_CAN_TP_QUEUE_LEN (150)
-
-/*Init free queue list*/
-extern void InitQueue(void);
-#endif
+#endif /* EN_CAN_TP */
 
 #endif /* CAN_TP_H_ */
 

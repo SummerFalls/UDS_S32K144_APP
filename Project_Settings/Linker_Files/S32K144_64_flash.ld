@@ -32,7 +32,7 @@
 ENTRY(Reset_Handler)
 
 HEAP_SIZE  = DEFINED(__heap_size__)  ? __heap_size__  : 0x00000400;
-STACK_SIZE = DEFINED(__stack_size__) ? __stack_size__ : 0x00000400;
+STACK_SIZE = DEFINED(__stack_size__) ? __stack_size__ : 0x00000800;
 
 /* If symbol __flash_vector_table__=1 is defined at link time
  * the interrupt vector will not be copied to RAM.
@@ -41,26 +41,25 @@ STACK_SIZE = DEFINED(__stack_size__) ? __stack_size__ : 0x00000400;
  */
 M_VECTOR_RAM_SIZE = DEFINED(__flash_vector_table__) ? 0x0 : 0x0400;
 
-APPUP_BOOT_FLAG_LEN = 0x00000010;
-
 /* Specify the memory areas */
 MEMORY
 {
-  /* bootloader debug */
-  /*m_interrupts          (RX)  : ORIGIN = 0x00000000, LENGTH = 0x00000400*/
-  /*m_flash_config        (RX)  : ORIGIN = 0x00000400, LENGTH = 0x00000010*/
+  /* Flash */
+  /* APP */
+  /*m_APP                 (RX)  : ORIGIN = 0x00014200, LENGTH = 0x0006BE00*//*512K - 80K - 512B*/
+  /*m_interrupts          (RX)  : ORIGIN = 0x00014200, LENGTH = 0x00000400*/
+  /*m_flash_config        (RX)  : ORIGIN = 0x00014600, LENGTH = 0x00000010*/
+  /*m_text                (RX)  : ORIGIN = 0x00014610, LENGTH = 0x0006B9F0*/
 
-  /* APP Flash */
-  m_interrupts            (RX)  : ORIGIN = 0x00014200, LENGTH = 0x00000400
-  /*m_flash_config        (RX)  : ORIGIN = 0x00000400, LENGTH = 0x00000010*/
-  m_text                  (RX)  : ORIGIN = 0x00014600, LENGTH = 0x0006BA00
+  m_interrupts          (RX)  : ORIGIN = 0x00014200, LENGTH = 0x00000400
+  m_text                (RX)  : ORIGIN = 0x00014600, LENGTH = 0x0006BA00
 
   /* SRAM_L */
-  m_data                  (RW)  : ORIGIN = 0x1FFF8000, LENGTH = 0x00008000
+  m_data                (RW)  : ORIGIN = 0x1FFF8000, LENGTH = 0x00008000
 
   /* SRAM_U */
-  m_data_2                (RW)  : ORIGIN = 0x20000000, LENGTH = 0x00006FF0
-  appup_boot_flag         (RW)  : ORIGIN = 0x20006FF0, LENGTH = 0x00000010
+  m_data_2              (RW)  : ORIGIN = 0x20000000, LENGTH = 0x00006FF0
+  m_exchange_info       (RW)  : ORIGIN = 0x20006FF0, LENGTH = 0x00000010  /*16B*/
 }
 
 /* Define output sections */
@@ -77,14 +76,12 @@ SECTIONS
     . = ALIGN(4);
   } > m_interrupts
 
-/*
-  .flash_config :
-  {
-    . = ALIGN(4);
-    KEEP(*(.FlashConfig))    /* Flash Configuration Field (FCF) */
-/*    . = ALIGN(4);
-  } > m_flash_config
-*/
+/*  .flash_config :           */
+/*  {                         */
+/*    . = ALIGN(4);           */
+/*    KEEP(*(.FlashConfig))   */ /* Flash Configuration Field (FCF) */
+/*    . = ALIGN(4);           */
+/*  } > m_flash_config        */
 
   /* The program code and other data goes into internal flash */
   .text :
@@ -94,17 +91,10 @@ SECTIONS
     *(.text*)                /* .text* sections (code) */
     *(.rodata)               /* .rodata sections (constants, strings, etc.) */
     *(.rodata*)              /* .rodata* sections (constants, strings, etc.) */
-    *(.glue_7)               /* glue arm to thumb code */
-    *(.glue_7t)              /* glue thumb to arm code */
+    *(.init)                 /* section used in crti.o files */
+    *(.fini)                 /* section used in crti.o files */
     *(.eh_frame)             /* section used in crtbegin.o files */
-    KEEP(*(.init))           /* section used in crti.o files */
-    KEEP(*(.fini))           /* section used in crti.o files */
     . = ALIGN(4);
-  } > m_text
-
-  .ARM.extab :
-  {
-    *(.ARM.extab* .gnu.linkonce.armextab.*)
   } > m_text
 
   /* Section used by the libgcc.a library for fvp4 */
@@ -113,64 +103,6 @@ SECTIONS
     __exidx_start = .;
     *(.ARM.exidx*)
     __exidx_end = .;
-  } > m_text
-
- .ctors :
-  {
-    __CTOR_LIST__ = .;
-    /* gcc uses crtbegin.o to find the start of
-       the constructors, so we make sure it is
-       first.  Because this is a wildcard, it
-       doesn't matter if the user does not
-       actually link against crtbegin.o; the
-       linker won't look for a file to match a
-       wildcard.  The wildcard also means that it
-       doesn't matter which directory crtbegin.o
-       is in.  */
-    KEEP (*crtbegin.o(.ctors))
-    KEEP (*crtbegin?.o(.ctors))
-    /* We don't want to include the .ctor section from
-       from the crtend.o file until after the sorted ctors.
-       The .ctor section from the crtend file contains the
-       end of ctors marker and it must be last */
-    KEEP (*(EXCLUDE_FILE(*crtend?.o *crtend.o) .ctors))
-    KEEP (*(SORT(.ctors.*)))
-    KEEP (*(.ctors))
-    __CTOR_END__ = .;
-  } > m_text
-
-  .dtors :
-  {
-    __DTOR_LIST__ = .;
-    KEEP (*crtbegin.o(.dtors))
-    KEEP (*crtbegin?.o(.dtors))
-    KEEP (*(EXCLUDE_FILE(*crtend?.o *crtend.o) .dtors))
-    KEEP (*(SORT(.dtors.*)))
-    KEEP (*(.dtors))
-    __DTOR_END__ = .;
-  } > m_text
-
-  .preinit_array :
-  {
-    PROVIDE_HIDDEN (__preinit_array_start = .);
-    KEEP (*(.preinit_array*))
-    PROVIDE_HIDDEN (__preinit_array_end = .);
-  } > m_text
-
-  .init_array :
-  {
-    PROVIDE_HIDDEN (__init_array_start = .);
-    KEEP (*(SORT(.init_array.*)))
-    KEEP (*(.init_array*))
-    PROVIDE_HIDDEN (__init_array_end = .);
-  } > m_text
-
-  .fini_array :
-  {
-    PROVIDE_HIDDEN (__fini_array_start = .);
-    KEEP (*(SORT(.fini_array.*)))
-    KEEP (*(.fini_array*))
-    PROVIDE_HIDDEN (__fini_array_end = .);
   } > m_text
 
   __etext = .;    /* Define a global symbol at end of code. */
@@ -198,7 +130,6 @@ SECTIONS
     __data_start__ = .;      /* Create a global symbol at data start. */
     *(.data)                 /* .data sections */
     *(.data*)                /* .data* sections */
-    KEEP(*(.jcr*))
     . = ALIGN(4);
     __data_end__ = .;        /* Define a global symbol at data end. */
   } > m_data
@@ -283,13 +214,4 @@ SECTIONS
   ASSERT(__rom_end <= (ORIGIN(m_text) + LENGTH(m_text)), "Region m_text overflowed!")
 
   ASSERT(__StackLimit >= __HeapLimit, "region m_data_2 overflowed with stack and heap")
-
-  .flag :
-  {
-    __APP_UPDATE_ADDR = .;
-    . += 0x01;
-    __BOOTLOADER_REQUEST_ADDR = .;
-    . += APPUP_BOOT_FLAG_LEN - 0x01;
-    *(.flag_ram);
-  } > appup_boot_flag
 }

@@ -294,11 +294,11 @@ __isr_vector:
     .size    __isr_vector, . - __isr_vector
 
 /* Flash Configuration */
-    .section .FlashConfig, "a"
-    .long 0xFFFFFFFF     /* 8 bytes backdoor comparison key           */
-    .long 0xFFFFFFFF     /*                                           */
-    .long 0xFFFFFFFF     /* 4 bytes program flash protection bytes    */
-    .long 0xFFFF7FFE     /* FDPROT:FEPROT:FOPT:FSEC(0xFE = unsecured) */
+    /*.section .FlashConfig, "a"
+    /*.long 0xFFFFFFFF     /* 8 bytes backdoor comparison key           */
+    /*.long 0xFFFFFFFF     /*                                           */
+    /*.long 0xFFFFFFFF     /* 4 bytes program flash protection bytes    */
+    /*.long 0xFFFF7FFE     /* FDPROT:FEPROT:FOPT:FSEC(0xFE = unsecured) */
 
     .text
     .thumb

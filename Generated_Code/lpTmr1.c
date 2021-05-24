@@ -7,7 +7,7 @@
 **     Version     : Component SDK_S32K1xx_15, Driver 01.00, CPU db: 3.00.000
 **     Repository  : SDK_S32K1xx_15
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2021-05-22, 16:52, # CodeGen: 4
+**     Date/Time   : 2021-05-24, 10:45, # CodeGen: 13
 **
 **     Copyright 1997 - 2015 Freescale Semiconductor, Inc. 
 **     Copyright 2016-2017 NXP 
@@ -53,7 +53,7 @@
 const lptmr_config_t lpTmr1_config0 = {
   .workMode = LPTMR_WORKMODE_TIMER,
   .dmaRequest = false,
-  .interruptEnable = false,
+  .interruptEnable = true,
   .freeRun = false,
   .compareValue = 1000U,
   .counterUnits = LPTMR_COUNTER_UNITS_MICROSECONDS,
