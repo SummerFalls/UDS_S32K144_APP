@@ -154,33 +154,5 @@
       <EmptySection_DummyValue />
     </Events>
   </Bean>
-  <Bean name="crc1" type="crc">
-    <Enabled v="Y" />
-    <Properties>
-      <Component_name v="crc1" />
-      <Device v="CRC" />
-      <Component_version v="S32_SDK" />
-    </Properties>
-    <Methods>
-      <EmptySection_DummyValue />
-    </Methods>
-    <Events>
-      <EmptySection_DummyValue />
-    </Events>
-  </Bean>
-  <Bean name="csec1" type="csec">
-    <Enabled v="Y" />
-    <Properties>
-      <Component_name v="csec1" />
-      <Device v="FTFC" />
-      <Component_version v="S32K144_SDK01" />
-    </Properties>
-    <Methods>
-      <EmptySection_DummyValue />
-    </Methods>
-    <Events>
-      <EmptySection_DummyValue />
-    </Events>
-  </Bean>
 </PE_PROJECT_SETTINGS_DOCUMENTATION>
 

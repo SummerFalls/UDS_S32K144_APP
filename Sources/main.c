@@ -183,21 +183,19 @@ int main(void)
     } /* loop forever */
 
     /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
-    /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
-#ifdef PEX_RTOS_START
+  /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
+  #ifdef PEX_RTOS_START
     PEX_RTOS_START();                  /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
-#endif
-
-    /*** End of RTOS startup code.  ***/
-    /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
-    for (;;) {
-        if (exit_code != 0) {
-            break;
-        }
+  #endif
+  /*** End of RTOS startup code.  ***/
+  /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
+  for(;;) {
+    if(exit_code != 0) {
+      break;
     }
-
-    return exit_code;
-    /*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
+  }
+  return exit_code;
+  /*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
 } /*** End of main routine. DO NOT MODIFY THIS TEXT!!! ***/
 
 /* END main */

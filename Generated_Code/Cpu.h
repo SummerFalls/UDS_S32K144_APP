@@ -7,7 +7,7 @@
 **     Version     : Component 01.197, Driver 01.00, CPU db: 3.00.000
 **     Datasheet   : S32K14XRM Rev. 2, 02/2017
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2021-02-20, 11:57, # CodeGen: 2
+**     Date/Time   : 2021-05-22, 17:33, # CodeGen: 5
 **     Abstract    :
 **
 **     Settings    :
@@ -65,8 +65,6 @@
 #include "lptmr_driver.h"
 #include "wdog_driver.h"
 #include "flexcan_driver.h"
-#include "crc_driver.h"
-#include "csec_driver.h"
 #include "system_S32K144.h"
 
 /* Including needed modules to compile this module/procedure */
@@ -77,8 +75,6 @@
 #include "lpTmr1.h"
 #include "watchdog1.h"
 #include "canCom1.h"
-#include "crc1.h"
-#include "csec1.h"
 
 #ifdef __cplusplus
 extern "C" {
